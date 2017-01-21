@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.exam.dao.ExamDao;
 import com.exam.model.SearchPageModel;
@@ -24,9 +23,6 @@ public class ExamService {
 
 	public List<SearchPageModel> search(SearchPageModel searchQuery) {
 		List<SearchPageModel> result = examdao.search(searchQuery);
-		if(CollectionUtils.isEmpty(result)){
-			result = addUser(searchQuery);
-		}
 		return result;
 	}
 

@@ -22,9 +22,7 @@ import com.exam.service.ExamService;
  *
  */
 @Controller
-@RequestMapping("/exam")
 public class ExamController {
-	
 
 	@Autowired
 	ExamService examService;
@@ -33,29 +31,39 @@ public class ExamController {
 	public ModelAndView getSearchPage() {
 		return new ModelAndView("searchpage", "command", new SearchPageModel());
 	}
-	
-	@RequestMapping(value = "/searchresult", method = RequestMethod.POST)
-	public String search(@ModelAttribute("SpringWeb")SearchPageModel searchQuery, 
-			   ModelMap model) {
-		if (StringUtils.isEmpty(searchQuery.getName()) || StringUtils.isEmpty(searchQuery.getFrom())
-				|| StringUtils.isEmpty(searchQuery.getTo()) || StringUtils.isEmpty(searchQuery.getDate())){
+
+	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	public String search(@ModelAttribute("SpringWeb") SearchPageModel searchQuery, ModelMap model) {
+		if (StringUtils.isEmpty(searchQuery.getCenterAddress()) || StringUtils.isEmpty(searchQuery.getExamDate())) {
 			model.addAttribute("command", searchQuery);
+			model.addAttribute("error", "Please fill all values");
 			return "searchpage";
 		}
 		List<SearchPageModel> searchResultList = examService.search(searchQuery);
-		model.addAttribute("searchResultList",searchResultList);
+		model.addAttribute("numOfResult", searchResultList.size());
+		model.addAttribute("command", searchQuery);
+		model.addAttribute("searchResultList", searchResultList);
 		return "searchresultpage";
 	}
-	
+
 	@RequestMapping(value = "/addevent", method = RequestMethod.GET)
-	public ModelAndView getAddPage() {
+	public ModelAndView getAddPage(@ModelAttribute("SpringWeb") SearchPageModel searchQuery, ModelMap model) {
 		return new ModelAndView("addpage", "command", new SearchPageModel());
 	}
-	
+
 	@RequestMapping(value = "/addevent", method = RequestMethod.POST)
-	public ModelAndView add(@ModelAttribute("SpringWeb")SearchPageModel addQuery, 
-			   ModelMap model) {
+	public String add(@ModelAttribute("SpringWeb") SearchPageModel addQuery, ModelMap model) {
+		if (StringUtils.isEmpty(addQuery.getCenterAddress()) || StringUtils.isEmpty(addQuery.getContactNumber())
+				|| StringUtils.isEmpty(addQuery.getExamDate()) || StringUtils.isEmpty(addQuery.getName())
+				|| StringUtils.isEmpty(addQuery.getPassword()) || StringUtils.isEmpty(addQuery.getStartPoint())) {
+			model.addAttribute("command", addQuery);
+			model.addAttribute("error", "Please fill all values");
+			return "addpage";
+		}
 		List<SearchPageModel> searchResultList = examService.addUser(addQuery);
-		return new ModelAndView("searchresultpage", "searchResultList", searchResultList);
+		model.addAttribute("numOfResult", searchResultList.size());
+		model.addAttribute("command", addQuery);
+		model.addAttribute("searchResultList", searchResultList);
+		return "searchresultpage";
 	}
 }

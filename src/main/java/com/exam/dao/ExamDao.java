@@ -25,15 +25,16 @@ public class ExamDao {
 
 	public List<SearchPageModel> search(SearchPageModel searchQuery) {
 		List<SearchPageModel> searchResultList = new ArrayList<SearchPageModel>();
-		String sql = "select * from event where ending = '"
-				+ searchQuery.getTo() + "' and doj ='" + searchQuery.getDate() + "'";
-		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+		String sql = "SELECT start_point , exam_center  , exam_date , user_name , contact_info FROM event WHERE exam_center = ? AND exam_date = ?";
+		Object[] parameters = {searchQuery.getCenterAddress(), searchQuery.getExamDate()};
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql, parameters);
 		for (Map<String, Object> row : rows) {
 			SearchPageModel searchResult = new SearchPageModel();
+			searchResult.setStartPoint((String) row.get("start_point"));
+			searchResult.setCenterAddress((String) row.get("exam_center"));
+			searchResult.setExamDate((String) row.get("exam_date"));
 			searchResult.setName((String) row.get("user_name"));
-			searchResult.setFrom((String) row.get("start_point"));
-			searchResult.setTo((String) row.get("ending"));
-			searchResult.setDate((String) row.get("doj"));
+			searchResult.setContactNumber((String) row.get("contact_info"));
 			searchResultList.add(searchResult);
 		}
 
@@ -41,11 +42,11 @@ public class ExamDao {
 	}
 
 	public boolean addUser(SearchPageModel addQuery) {
-		/*Object[] parameters = {addQuery.getFrom(), addQuery.getTo(),
-			addQuery.getDate()};*/
-		String sql = "INSERT INTO event VALUES('"+addQuery.getName()+ "','"+addQuery.getFrom()+ "','"+addQuery.getTo()+"','"+addQuery.getDate()+"')";
-		
-		int flag = jdbcTemplate.update(sql);
+		String sql = "INSERT INTO event VALUES(?,?,?,?,?,?)";
+		Object[] parameters = { addQuery.getStartPoint(), addQuery.getCenterAddress(), 
+				addQuery.getExamDate(),	addQuery.getName(), 
+				addQuery.getContactNumber(), addQuery.getPassword()};
+		int flag = jdbcTemplate.update(sql , parameters);
 		if(flag>0){
 			return true;
 		}
