@@ -94,18 +94,31 @@ th {
 		</div>
 	</c:if>
 
-	<form:form method="POST" action="/exam/addevent">
-		<table align="center">
-			<tr>
-				<td>Search result is not relevant to you? Don't worry add
-					yourself, So that other can contact You.</td>
-			</tr>
-			<form:input path="centerAddress" type="hidden" />
-			<form:input path="examDate" type="hidden" />
-			<tr>
-				<td colspan="2"><input type="submit" value="Add Your Journey" /></td>
-			</tr>
-		</table>
-	</form:form>
+	<c:choose>
+
+		<c:when test="${addSuccess > 0}">
+			<table align="center">
+				<tr>
+					<td>Your exam details saved successfully, Now other user can
+						see this</td>
+				</tr>
+			</table>
+		</c:when>
+		<c:otherwise>
+			<form:form method="POST" action="/exam/addevent">
+				<table align="center">
+					<tr>
+						<td>Do you want to add yourself in list?</td>
+						<td><input type="submit" value="Add Your Journey" /></td>
+					</tr>
+					<form:input path="centerAddress" type="hidden" />
+					<form:input path="examDate" type="hidden" />
+				</table>
+		</form:form>
+		</c:otherwise>
+
+	</c:choose>
+
+
 </body>
 </html>

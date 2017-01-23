@@ -36,8 +36,8 @@ div {
 	padding: 20px;
 }
 
-.error{
-color :red
+.error {
+	color: red
 }
 </style>
 </head>
@@ -46,15 +46,17 @@ color :red
 	<form:form method="POST" action="/exam/search">
 		<div>
 			<table align="center">
-			<tr>
-				<th colspan="3">Please fill below details, to search others going to your exam center</th>
-			</tr>
+				<tr>
+					<th colspan="3">Please fill below details, to search others
+						going to your exam center</th>
+				</tr>
 				<tr>
 					<td class="error">${error}</td>
 				</tr>
 				<tr>
 					<td>Exam Center Name</td>
-					<td colspan="2"><form:input path="centerAddress" id="toaddress" /></td>
+					<td colspan="2"><form:input path="centerAddress"
+							id="toaddress" placeholder="Your exam center" autocomplete="on"/></td>
 				</tr>
 				<tr>
 					<td>Date of Exam</td>
@@ -67,15 +69,18 @@ color :red
 	</form:form>
 	<script type="text/javascript"
 		src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCqEeDl_RFPExSr2ySPt6qggi6HC89wa88&sensor=false&libraries=places&language=en-AU"></script>
-	<script>
-		var autocomplete = new google.maps.places.Autocomplete(
-				$("#toaddress")[0], {});
-
-		google.maps.event.addListener(autocomplete, 'place_changed',
-				function() {
-					var place = autocomplete.getPlace();
-					console.log(place.address_components);
-				});
+	<script type="text/javascript">
+		function initialize() {
+			var options = {
+				componentRestrictions : {
+					country : "IN"
+				}
+			};
+			var input = document.getElementById('toaddress');
+			var autocomplete = new google.maps.places.Autocomplete(input,
+					options);
+		}
+		google.maps.event.addDomListener(window, 'load', initialize);
 	</script>
 </body>
 </html>

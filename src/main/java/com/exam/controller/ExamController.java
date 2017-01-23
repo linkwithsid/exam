@@ -64,6 +64,7 @@ public class ExamController {
 		model.addAttribute("numOfResult", searchResultList.size());
 		model.addAttribute("command", addQuery);
 		model.addAttribute("searchResultList", searchResultList);
+		model.addAttribute("addSuccess", 1);		
 		return "searchresultpage";
 	}
 }
